@@ -5,6 +5,7 @@ class Item {
   late String description; // Description of the item
   late String imageUrl; // URL for the item's image (optional)
   late int quantity; // Quantity of the item (optional, for cart purposes)
+  late bool? isFeatured;
 
   Item({
     required this.id,
@@ -13,5 +14,6 @@ class Item {
     required this.description,
     this.imageUrl = '',
     this.quantity = 1,
+    this.isFeatured = false
   });
 }
