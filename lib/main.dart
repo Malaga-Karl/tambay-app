@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tambay/screens/cart_screen.dart';
 // import 'package:tambay/screens/cart_screen.dart';
 import 'package:tambay/screens/home_screen.dart';
+import 'package:tambay/screens/search_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,7 +23,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const HomeScreen(),
-        '/cart': (context) => const CartScreen()
+        '/cart': (context) => const CartScreen(),
+        '/search': (context) => const SearchScreen(),
       },
     );
   }
