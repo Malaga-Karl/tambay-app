@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text("Tambay"),
           actions: [
-            IconButton(onPressed: (){}, icon: Icon(Icons.search)),
+            IconButton(onPressed: (){Navigator.pushNamed(context, '/search');}, icon: Icon(Icons.search)),
             IconButton(
               onPressed: (){Navigator.pushNamed(context, "/cart");}, 
               icon: cartItemCount > 0 ? 
