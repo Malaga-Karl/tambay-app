@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tambay/screens/cart_screen.dart';
 // import 'package:tambay/screens/cart_screen.dart';
 import 'package:tambay/screens/home_screen.dart';
 
@@ -13,6 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const HomeScreen(),
-        // '/cart': (context) => const CartScreen()
+        '/cart': (context) => const CartScreen()
       },
     );
   }

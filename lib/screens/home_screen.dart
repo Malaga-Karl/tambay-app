@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tambay/components/cart_item_component.dart';
+import 'package:tambay/data/dummy_cart.dart';
 import 'package:tambay/models/item.dart';
 import 'package:tambay/data/dummy_items.dart';
 
@@ -13,6 +14,7 @@ class HomeScreen extends StatelessWidget {
 
     List<Item> dummy_items = dummyItems;
     List<Item> featuredItems = dummy_items.where((item) => item.isFeatured == true).toList();
+    int cartItemCount = dummyCartItems.length;
 
     return DefaultTabController(
       initialIndex: 0,
@@ -22,7 +24,13 @@ class HomeScreen extends StatelessWidget {
           title: Text("Tambay"),
           actions: [
             IconButton(onPressed: (){}, icon: Icon(Icons.search)),
-            IconButton(onPressed: (){}, icon: Icon(Icons.shopping_cart_outlined))
+            IconButton(
+              onPressed: (){Navigator.pushNamed(context, "/cart");}, 
+              icon: cartItemCount > 0 ? 
+                Badge.count(count: cartItemCount, child: Icon(Icons.shopping_cart_outlined),)
+                : 
+                Icon(Icons.shopping_cart_outlined)
+              )
           ],
           bottom: TabBar(
             tabs: [
