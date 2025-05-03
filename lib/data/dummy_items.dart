@@ -7,6 +7,7 @@ List<Item> dummyItems = [
     price: 20.00,
     description: "A comfortable cotton t-shirt available in various colors.",
     imageUrl: "https://cdn.logojoy.com/wp-content/uploads/20230824145637/hiking-business-t-shirt-design-idea.jpg",
+    isFeatured: true,
   ),
   Item(
     id: 2,
@@ -35,6 +36,7 @@ List<Item> dummyItems = [
     price: 15.00,
     description: "A trendy cap to complete your casual look.",
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/5/58/Basecap_New_York_Yankees.jpg",
+    isFeatured: true,
   ),
   Item(
     id: 6,
@@ -56,6 +58,7 @@ List<Item> dummyItems = [
     price: 100.00,
     description: "A stylish leather jacket for all seasons.",
     imageUrl: "https://m.media-amazon.com/images/I/61HknRN0TcL._AC_SL1500_.jpg",
+    isFeatured: true,
   ),
   Item(
     id: 9,
@@ -63,6 +66,7 @@ List<Item> dummyItems = [
     price: 80.00,
     description: "Comfortable sneakers for everyday wear.",
     imageUrl: "https://cdn.thewirecutter.com/wp-content/media/2024/05/white-sneaker-2048px-9320.jpg?auto=webp&quality=75&crop=1.91:1&width=1200",
+    isFeatured: true,
   ),
   Item(
     id: 10,

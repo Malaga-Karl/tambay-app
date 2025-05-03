@@ -12,6 +12,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     List<Item> dummy_items = dummyItems;
+    List<Item> featuredItems = dummy_items.where((item) => item.isFeatured == true).toList();
 
     return DefaultTabController(
       initialIndex: 0,
@@ -49,7 +50,18 @@ class HomeScreen extends StatelessWidget {
                 )
               ),
               Center(
-                child: Text("Featured"),
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10.0, // Spacing between columns
+                    mainAxisSpacing: 10.0, // Spacing between rows
+                    childAspectRatio: 0.65, // Aspect ratio of each item
+                  ),
+                  itemCount: featuredItems.length,
+                  itemBuilder: (context, index) {
+                    return CartItemComponent(dummyItem: featuredItems[index]);
+                  },
+                ),
               )
             ],
           ),
