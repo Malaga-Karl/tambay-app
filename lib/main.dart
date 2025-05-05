@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:tambay/data/dummy_items.dart';
+import 'package:tambay/models/item.dart';
 import 'package:tambay/screens/cart_screen.dart';
-// import 'package:tambay/screens/cart_screen.dart';
 import 'package:tambay/screens/home_screen.dart';
 import 'package:tambay/screens/search_screen.dart';
+import 'package:tambay/screens/specific_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,6 +27,17 @@ class MyApp extends StatelessWidget {
         '/': (context) => const HomeScreen(),
         '/cart': (context) => const CartScreen(),
         '/search': (context) => const SearchScreen(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name != null && settings.name!.startsWith('/specific/')) {
+          final id = int.tryParse(settings.name!.split('/').last);
+          if (id != null) {
+            return MaterialPageRoute(
+              builder: (context) => SpecificScreen(id: id)
+            );
+          }
+        }
+        return null;
       },
     );
   }
