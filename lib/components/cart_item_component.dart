@@ -10,7 +10,10 @@ class CartItemComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       child: InkWell(
-        onTap: () {print("clicked item ${dummyItem.id}");},
+        onTap: () {
+          print("clicked item ${dummyItem.id}");
+          Navigator.pushNamed(context, "/specific/${dummyItem.id}");
+        },
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey, width: 2),
