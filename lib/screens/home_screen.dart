@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
 
     List<Item> dummy_items = dummyItems;
     List<Item> featuredItems = dummy_items.where((item) => item.isFeatured == true).toList();
-    int cartItemCount = dummyCartItems.length;
+    int cartItemCount = dummyCartItemsEmpty.length;
 
     return DefaultTabController(
       initialIndex: 0,

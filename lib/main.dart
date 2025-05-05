@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tambay/data/dummy_items.dart';
-import 'package:tambay/models/item.dart';
+
 import 'package:tambay/screens/cart_screen.dart';
 import 'package:tambay/screens/home_screen.dart';
 import 'package:tambay/screens/search_screen.dart';

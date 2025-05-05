@@ -8,7 +8,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    List<Item> dummy_cart_items = dummyCartItems;
+    List<Item> dummy_cart_items = dummyCartItemsEmpty;
 
     return Scaffold(
       appBar: AppBar(
