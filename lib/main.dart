@@ -23,8 +23,8 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const SPTest(),
-        // '/': (context) => const HomeScreen(),
+        // '/': (context) => const SPTest(),
+        '/': (context) => const HomeScreen(),
         '/cart': (context) => const CartScreen(),
         '/search': (context) => const SearchScreen(),
       },
