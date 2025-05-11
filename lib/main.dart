@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:tambay/screens/cart_screen.dart';
 import 'package:tambay/screens/home_screen.dart';
 import 'package:tambay/screens/search_screen.dart';
+import 'package:tambay/screens/sp_test.dart';
 import 'package:tambay/screens/specific_screen.dart';
 
 void main() {
@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
+        // '/': (context) => const SPTest(),
         '/': (context) => const HomeScreen(),
         '/cart': (context) => const CartScreen(),
         '/search': (context) => const SearchScreen(),

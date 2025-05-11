@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tambay/models/item.dart';
+import 'package:tambay/service/cart_service.dart';
 
 class CartItemComponent extends StatelessWidget {
   const CartItemComponent({super.key, required this.dummyItem});
@@ -27,9 +28,24 @@ class CartItemComponent extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: TextButton.icon(
-                  onPressed: (){
-                    print("added to cart item ${dummyItem.id}");
-                  }, 
+                  onPressed: () async {
+                    try {
+                      // Add the item to the cart using the cart service
+                      await CartService().saveCartItem(
+                        dummyItem.id,
+                        1,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Added ${dummyItem.name} to cart"),
+                        ),
+                      );
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Failed to add to cart: $e")),
+                      );
+                    }
+                  },
                   label: Text("Add to Cart"), 
                   icon: Icon(Icons.add_shopping_cart_outlined),
                   style: OutlinedButton.styleFrom(
