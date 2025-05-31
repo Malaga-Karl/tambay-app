@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tambay/models/item.dart';
-import 'package:tambay/data/dummy_items.dart';
+// import 'package:tambay/provider/product_provider.dart';
+import 'package:tambay/provider/products_provider.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -10,20 +12,20 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  List<Item> searchResults = dummyItems; // Show all items by default
+  List<Item> searchResults = [];
   final TextEditingController searchController = TextEditingController();
 
-  void _searchItems(String query) {
+  void _searchItems(String query, List<Item> allItems) {
     if (query.isEmpty) {
       setState(() {
-        searchResults = dummyItems; // Show all items if query is empty
+        searchResults = allItems; // Show all items if query is empty
       });
       return;
     }
 
     final results =
-        dummyItems.where((item) {
-          final itemName = item.name.toLowerCase();
+        allItems.where((item) {
+          final itemName = item.title.toLowerCase();
           final input = query.toLowerCase();
           return itemName.contains(input);
         }).toList();
@@ -34,7 +36,16 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final allItems = Provider.of<ProductProvider>(context, listen: false).items;
+    searchResults = allItems; // Initialize with all fetched items
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final allItems = Provider.of<ProductProvider>(context).items;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Search Items"),
@@ -44,7 +55,7 @@ class _SearchScreenState extends State<SearchScreen> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: searchController,
-              onChanged: _searchItems,
+              onChanged: (query) => _searchItems(query, allItems),
               decoration: InputDecoration(
                 hintText: "Search for items...",
                 prefixIcon: Icon(Icons.search),
@@ -60,7 +71,9 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
       body:
-          searchResults.isEmpty
+          allItems.isEmpty
+              ? Center(child: CircularProgressIndicator())
+              : searchResults.isEmpty
               ? Center(
                 child: Text(
                   "No items found.",
@@ -74,15 +87,15 @@ class _SearchScreenState extends State<SearchScreen> {
                   final item = searchResults[index];
                   return ListTile(
                     leading: Image.network(
-                      item.imageUrl,
+                      item.image.src,
                       width: 50,
                       height: 50,
                       fit: BoxFit.cover,
                     ),
-                    title: Text(item.name),
-                    subtitle: Text("P${item.price}"),
+                    title: Text(item.title),
+                    subtitle: Text("P${item.variants[0].price}"),
                     onTap: () {
-                      print("Tapped on ${item.name}");
+                      print("Tapped on ${item.title}");
                     },
                   );
                 },

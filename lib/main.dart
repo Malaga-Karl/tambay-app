@@ -1,12 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
+import 'package:tambay/provider/cart_provider.dart';
+import 'package:tambay/provider/products_provider.dart';
 import 'package:tambay/screens/cart_screen.dart';
 import 'package:tambay/screens/home_screen.dart';
 import 'package:tambay/screens/search_screen.dart';
-import 'package:tambay/screens/sp_test.dart';
+// import 'package:tambay/screens/sp_test.dart';
 import 'package:tambay/screens/specific_screen.dart';
+import 'package:tambay/screens/test_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized(); 
+  await dotenv.load();
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => ProductProvider()..fetchItems()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
