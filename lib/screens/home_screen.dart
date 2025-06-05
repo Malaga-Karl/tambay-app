@@ -2,22 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tambay/components/cart_item_component.dart';
 // import 'package:tambay/data/dummy_cart.dart';
-import 'package:tambay/models/item.dart';
+// import 'package:tambay/models/item.dart';
 // import 'package:tambay/data/dummy_items.dart';
 import 'package:tambay/provider/products_provider.dart';
 
-
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    Provider.of<ProductProvider>(context, listen: false).fetchItems();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    // List<Item> dummy_items = dummyItems;
-    // List<Item> featuredItems = dummy_items.where((item) => item.isFeatured == true).toList();
-    // int cartItemCount = dummyCartItemsEmpty.length;
-
     return DefaultTabController(
       initialIndex: 0,
       length: 2,
@@ -25,21 +30,21 @@ class HomeScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text("Tambay"),
           actions: [
-            IconButton(onPressed: (){Navigator.pushNamed(context, '/search');}, icon: Icon(Icons.search)),
+            IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/search');
+              },
+              icon: Icon(Icons.search),
+            ),
             // IconButton(
-            //   onPressed: (){Navigator.pushNamed(context, "/cart");}, 
-            //   icon: cartItemCount > 0 ? 
+            //   onPressed: (){Navigator.pushNamed(context, "/cart");},
+            //   icon: cartItemCount > 0 ?
             //     Badge.count(count: cartItemCount, child: Icon(Icons.shopping_cart_outlined),)
-            //     : 
+            //     :
             //     Icon(Icons.shopping_cart_outlined)
             //   )
           ],
-          bottom: TabBar(
-            tabs: [
-              Tab(text: "Shop",),
-              Tab(text: "Featured",)
-            ] 
-          ),
+          bottom: TabBar(tabs: [Tab(text: "Shop"), Tab(text: "Featured")]),
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -89,4 +94,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-
