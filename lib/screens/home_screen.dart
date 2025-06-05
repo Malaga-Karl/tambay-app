@@ -30,19 +30,46 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           title: Text("Tambay"),
           actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 8.0,
+                horizontal: 16.0,
+              ),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/search');
+                },
+                child: Container(
+                  width: 220,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12.0,
+                    vertical: 8.0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24.0),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.search, color: Colors.grey),
+                      SizedBox(width: 8),
+                      Text("Search...", style: TextStyle(color: Colors.grey)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/search');
+                Navigator.pushNamed(context, "/cart");
               },
-              icon: Icon(Icons.search),
+              icon:
+              // cartItemCount > 0 ?
+              //   Badge.count(count: cartItemCount, child: Icon(Icons.shopping_cart_outlined),)
+              //   :
+              Icon(Icons.shopping_cart_outlined),
             ),
-            // IconButton(
-            //   onPressed: (){Navigator.pushNamed(context, "/cart");},
-            //   icon: cartItemCount > 0 ?
-            //     Badge.count(count: cartItemCount, child: Icon(Icons.shopping_cart_outlined),)
-            //     :
-            //     Icon(Icons.shopping_cart_outlined)
-            //   )
           ],
           bottom: TabBar(tabs: [Tab(text: "Shop"), Tab(text: "Featured")]),
         ),
