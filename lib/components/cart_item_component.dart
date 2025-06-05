@@ -3,17 +3,17 @@ import 'package:tambay/models/item.dart';
 import 'package:tambay/service/cart_service.dart';
 
 class CartItemComponent extends StatelessWidget {
-  const CartItemComponent({super.key, required this.dummyItem});
+  const CartItemComponent({super.key, required this.item});
 
-  final Item dummyItem;
+  final Item item;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       child: InkWell(
         onTap: () {
-          print("clicked item ${dummyItem.id}");
-          Navigator.pushNamed(context, "/specific/${dummyItem.id}");
+          print("clicked item ${item.id}");
+          Navigator.pushNamed(context, "/specific/${item.id}");
         },
         child: Container(
           decoration: BoxDecoration(
@@ -21,9 +21,9 @@ class CartItemComponent extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Container(height:200 , child:Image.network(dummyItem.imageUrl, fit: BoxFit.cover,)),
-              Text(dummyItem.name),
-              Text("P${dummyItem.price}"),
+              Container(height:160 , child:Image.network(item.image.src, fit: BoxFit.cover,)),
+              Text(item.title),
+              Text("P${item.variants[0].price}"),
               Spacer(),
               SizedBox(
                 width: double.infinity,
@@ -32,12 +32,12 @@ class CartItemComponent extends StatelessWidget {
                     try {
                       // Add the item to the cart using the cart service
                       await CartService().saveCartItem(
-                        dummyItem.id,
+                        item.id,
                         1,
                       );
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text("Added ${dummyItem.name} to cart"),
+                          content: Text("Added ${item.title} to cart"),
                         ),
                       );
                     } catch (e) {
