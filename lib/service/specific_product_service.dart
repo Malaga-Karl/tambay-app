@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:tambay/models/item.dart';
-import 'package:tambay/models/product_image.dart';
+// import 'package:tambay/models/product_image.dart';
 
 class SpecificProductService {
   final dio = Dio(

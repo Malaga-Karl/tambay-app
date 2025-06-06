@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tambay/models/item.dart';
 import 'package:tambay/service/specific_product_service.dart';
 
@@ -55,13 +56,13 @@ class _SpecificScreenState extends State<SpecificScreen> {
         body: Center(child: CircularProgressIndicator()),
       );
     }
-    int variantCount = item!.variants.length;
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 40),
         child: Center(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 24),
@@ -86,23 +87,17 @@ class _SpecificScreenState extends State<SpecificScreen> {
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  item!.title,
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
+              Text(
+                item!.title,
+                style: Theme.of(
+                  context,
+                ).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold),
+                textAlign: TextAlign.left,
               ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "PHP ${item!.variants[variantIndex].price}",
-                  style: Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.left,
-                ),
+              Text(
+                "PHP ${item!.variants[variantIndex].price}",
+                style: Theme.of(context).textTheme.titleLarge,
+                textAlign: TextAlign.left,
               ),
               Visibility(
                 visible: item!.variants.length > 1,
@@ -124,6 +119,60 @@ class _SpecificScreenState extends State<SpecificScreen> {
                   },
                 ),
               ),
+              SizedBox(height: 20),
+              Text("Quantity"),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                // padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade400, width: 1.5),
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.white,
+                ),
+                child: IntrinsicWidth(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        onPressed: quantity > 1 ? _decrementQuantity : null,
+                        icon: Icon(Icons.remove),
+                      ),
+                      SizedBox(
+                        width: 50,
+                        child: TextField(
+                          controller: TextEditingController(
+                            text: quantity.toString(),
+                          ),
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            isDense: true,
+                            contentPadding: EdgeInsets.symmetric(vertical: 8),
+                          ),
+                          onChanged: (value) {
+                            final numValue = int.tryParse(value) ?? 1;
+                            if (numValue > 0) {
+                              setState(() {
+                                quantity = numValue;
+                              });
+                            }
+                          },
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: _incrementQuantity,
+                        icon: Icon(Icons.add),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(onPressed: () {}, child: Text("Add to Cart")),
             ],
           ),
         ),
