@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tambay/models/item.dart';
+import 'package:tambay/service/cart_service.dart';
 import 'package:tambay/service/specific_product_service.dart';
 
 class SpecificScreen extends StatefulWidget {
@@ -172,7 +173,22 @@ class _SpecificScreenState extends State<SpecificScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              ElevatedButton(onPressed: () {}, child: Text("Add to Cart")),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    // Add the item to the cart using the cart service
+                    await CartService().saveCartItem(item!.id, quantity);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Added ${item!.title} to cart")),
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Failed to add to cart: $e")),
+                    );
+                  }
+                },
+                child: Text("Add to Cart"),
+              ),
             ],
           ),
         ),

@@ -5,6 +5,7 @@ import 'package:tambay/components/cart_item_component.dart';
 // import 'package:tambay/models/item.dart';
 // import 'package:tambay/data/dummy_items.dart';
 import 'package:tambay/provider/products_provider.dart';
+import 'package:tambay/service/cart_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -74,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
           bottom: TabBar(tabs: [Tab(text: "Shop"), Tab(text: "Featured")]),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Consumer<ProductProvider>(
             builder: (context, productProvider, _) {
               if (productProvider.isLoading) {
@@ -99,18 +100,24 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                   // Featured Tab
-                  GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10.0,
-                          mainAxisSpacing: 10.0,
-                          childAspectRatio: 0.65,
-                        ),
-                    itemCount: items.length,
-                    itemBuilder: (context, index) {
-                      return CartItemComponent(item: items[index]);
+                  // GridView.builder(
+                  //   gridDelegate:
+                  //       const SliverGridDelegateWithFixedCrossAxisCount(
+                  //         crossAxisCount: 2,
+                  //         crossAxisSpacing: 10.0,
+                  //         mainAxisSpacing: 10.0,
+                  //         childAspectRatio: 0.65,
+                  //       ),
+                  //   itemCount: items.length,
+                  //   itemBuilder: (context, index) {
+                  //     return CartItemComponent(item: items[index]);
+                  //   },
+                  // ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await CartService().clearPrefs();
                     },
+                    child: Text("Delete All Items in Cart"),
                   ),
                 ],
               );

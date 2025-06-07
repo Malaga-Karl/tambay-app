@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tambay/models/item.dart';
+import 'package:tambay/models/shared_pref.dart';
 import 'package:tambay/provider/cart_provider.dart';
 import 'dart:convert';
 
-class CartScreen extends StatelessWidget {
+import 'package:tambay/service/cart_service.dart';
+
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
   Future<Map<String, dynamic>> _getSharedPreferencesValues() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final cartData = prefs.getString('cart_items');
@@ -18,10 +27,12 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var deviceHeight = MediaQuery.of(context).size.height;
+    // var deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(title: Text("Your Shopping Cart")),
       body: SizedBox(
-        height: 700,
+        height: deviceHeight * 0.8,
         child: FutureBuilder<Map<String, dynamic>>(
           future: _getSharedPreferencesValues(),
           builder: (context, snapshot) {
@@ -36,12 +47,20 @@ class CartScreen extends StatelessWidget {
                   // "Select All" Checkbox
                   Consumer<CartProvider>(
                     builder: (context, cartProvider, _) {
-                      return CheckboxListTile(
-                        title: Text("Select All"),
-                        value: cartProvider.isSelectAll,
-                        onChanged: (bool? value) {
-                          cartProvider.toggleSelectAll(value ?? false, cartItems);
-                        },
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text("Select All"),
+                          Checkbox(
+                            value: cartProvider.isSelectAll,
+                            onChanged: (bool? value) {
+                              cartProvider.toggleSelectAll(
+                                value ?? false,
+                                cartItems,
+                              );
+                            },
+                          ),
+                        ],
                       );
                     },
                   ),
@@ -50,7 +69,15 @@ class CartScreen extends StatelessWidget {
                       children:
                           cartItems.entries.map((entry) {
                             final itemId = entry.key;
-                            final quantity = entry.value;
+                            final value = entry.value;
+                            if (value == null) {
+                              return ListTile(
+                                title: Text("Invalid item"),
+                                subtitle: Text(
+                                  "This item could not be loaded.",
+                                ),
+                              );
+                            }
                             return Consumer<CartProvider>(
                               builder: (context, cartProvider, _) {
                                 return ListTile(
@@ -65,8 +92,8 @@ class CartScreen extends StatelessWidget {
                                       );
                                     },
                                   ),
-                                  title: Text("Item ID: $itemId"),
-                                  subtitle: Text("Quantity: $quantity"),
+                                  title: Text(itemId),
+                                  subtitle: Text(value.toString()),
                                   onTap: () {
                                     Navigator.pushNamed(
                                       context,
@@ -80,9 +107,18 @@ class CartScreen extends StatelessWidget {
                     ),
                   ),
                   // Checkout Button
+                  ElevatedButton(
+                    onPressed: () async {
+                      await CartService().clearPrefs();
+                      setState(() {}); // <-- This will refresh the screen
+                    },
+                    child: Text("Delete All Items in Cart"),
+                  ),
                   Consumer<CartProvider>(
                     builder: (context, cartProvider, _) {
-                      final isCheckoutEnabled = cartProvider.selectedItems.values
+                      final isCheckoutEnabled = cartProvider
+                          .selectedItems
+                          .values
                           .any((isChecked) => isChecked);
                       return Padding(
                         padding: const EdgeInsets.all(16.0),
