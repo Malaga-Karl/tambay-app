@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tambay/models/item.dart';
+import 'package:tambay/models/shared_pref.dart';
 import 'package:tambay/service/cart_service.dart';
 
 class CartItemComponent extends StatelessWidget {
@@ -10,7 +11,7 @@ class CartItemComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var deviceHeight = MediaQuery.of(context).size.height;
-    var deviceWidth = MediaQuery.of(context).size.width;
+    // var deviceWidth = MediaQuery.of(context).size.width;
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade300, width: 2),
@@ -43,7 +44,10 @@ class CartItemComponent extends StatelessWidget {
                   onPressed: () async {
                     try {
                       // Add the item to the cart using the cart service
-                      await CartService().saveCartItem(item.id, 1);
+                      await CartService().saveCartItem(
+                        item.id,
+                        SharedPref(item: item, quantity: 1),
+                      );
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text("Added ${item.title} to cart")),
                       );

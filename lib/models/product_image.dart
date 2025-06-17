@@ -40,4 +40,20 @@ class ProductImage {
       variantIds: List<dynamic>.from(json['variant_ids']),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'alt': alt,
+      'position': position,
+      'product_id': productId,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
+      'admin_graphql_api_id': adminGraphqlApiId,
+      'width': width,
+      'height': height,
+      'src': src,
+      'variant_ids': variantIds,
+    };
+  }
 }

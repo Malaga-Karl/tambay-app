@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tambay/models/item.dart';
+import 'package:tambay/models/shared_pref.dart';
 import 'package:tambay/service/cart_service.dart';
 import 'package:tambay/service/specific_product_service.dart';
 
@@ -177,7 +178,10 @@ class _SpecificScreenState extends State<SpecificScreen> {
                 onPressed: () async {
                   try {
                     // Add the item to the cart using the cart service
-                    await CartService().saveCartItem(item!.id, quantity);
+                    await CartService().saveCartItem(
+                      item!.id,
+                      SharedPref(item: item!, quantity: quantity),
+                    );
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text("Added ${item!.title} to cart")),
                     );

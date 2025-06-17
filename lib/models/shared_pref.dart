@@ -1,10 +1,12 @@
+import 'package:tambay/models/item.dart';
+
 class SharedPref {
-  final String title;
+  final Item item;
   final int quantity;
 
-  SharedPref({required this.title, required this.quantity});
+  SharedPref({required this.item, required this.quantity});
 
   factory SharedPref.fromJson(Map<String, dynamic> json) {
-    return SharedPref(title: json["title"], quantity: json["quantity"]);
+    return SharedPref(item: json["item"], quantity: json["quantity"]);
   }
 }

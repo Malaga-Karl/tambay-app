@@ -1,10 +1,13 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tambay/models/item.dart';
 import 'dart:convert';
+
+import 'package:tambay/models/shared_pref.dart';
 
 class CartService {
   static const String _cartKey = 'cart_items';
 
-  Future<void> saveCartItem(int itemId, int quantity) async {
+  Future<void> saveCartItem(int itemId, SharedPref data) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final cart = prefs.getString(_cartKey);
 
@@ -15,9 +18,12 @@ class CartService {
 
     if (cartItems.containsKey(idStr) && cartItems[idStr] is Map) {
       cartItems[idStr]["quantity"] =
-          (cartItems[idStr]["quantity"] ?? 0) + quantity;
+          (cartItems[idStr]["quantity"] ?? 0) + data.quantity;
     } else {
-      cartItems[idStr] = {"quantity": quantity};
+      cartItems[idStr] = {
+        "quantity": data.quantity,
+        "data": jsonEncode(data.item.toJson()),
+      };
     }
     await prefs.setString(_cartKey, jsonEncode(cartItems));
   }
