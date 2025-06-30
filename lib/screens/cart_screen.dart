@@ -6,6 +6,7 @@ import 'package:tambay/models/item.dart';
 import 'package:tambay/models/shared_pref.dart';
 import 'package:tambay/provider/cart_provider.dart';
 import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:tambay/service/cart_service.dart';
 
@@ -21,8 +22,19 @@ class _CartScreenState extends State<CartScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final cartData = prefs.getString('cart_items');
     if (cartData != null) {
-      return jsonDecode(cartData); // Parse the JSON string into a Map
+      try {
+        final decoded = jsonDecode(cartData);
+
+        if (decoded is Map<String, dynamic>) {
+          return decoded;
+        } else {
+          print("Decoded JSON is not a Map: $decoded");
+        }
+      } catch (e) {
+        print("Error decoding cart_items JSON: $e");
+      }
     }
+
     return {}; // Return an empty map if no data is found
   }
 
@@ -43,6 +55,21 @@ class _CartScreenState extends State<CartScreen> {
       }
     });
     return total;
+  }
+
+  Future<void> openURL(String urlString) async {
+    final Uri uri = Uri.parse(urlString);
+    try {
+      final launched = await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+      if (!launched) {
+        print("Could not launch $uri");
+      }
+    } catch (e) {
+      print("Error launching URL: $e");
+    }
   }
 
   @override
@@ -92,8 +119,19 @@ class _CartScreenState extends State<CartScreen> {
                             cartItems.entries.map((entry) {
                               final itemId = entry.key;
                               final value = entry.value;
-                              if (value == null ||
+
+                              if (value is! Map ||
                                   value['quantity'] == null ||
+                                  value['data'] == null) {
+                                return ListTile(
+                                  title: Text("Invalid item"),
+                                  subtitle: Text(
+                                    "This item could not be loaded.",
+                                  ),
+                                );
+                              }
+
+                              if (value['quantity'] == null ||
                                   value['data'] == null) {
                                 return ListTile(
                                   title: Text("Invalid item"),
@@ -108,7 +146,6 @@ class _CartScreenState extends State<CartScreen> {
                                 value['quantity'].toString(),
                               );
                               final item = Item.fromJson(itemMap);
-
                               return Consumer<CartProvider>(
                                 builder: (context, cartProvider, _) {
                                   return InkWell(
@@ -178,17 +215,32 @@ class _CartScreenState extends State<CartScreen> {
                                           ],
                                         ),
                                         Spacer(),
-                                        Checkbox(
-                                          value:
-                                              cartProvider
-                                                  .selectedItems[itemId] ??
-                                              false,
-                                          onChanged: (bool? value) {
-                                            cartProvider.toggleItem(
-                                              itemId,
-                                              value ?? false,
-                                            );
-                                          },
+                                        Column(
+                                          children: [
+                                            Checkbox(
+                                              value:
+                                                  cartProvider
+                                                      .selectedItems[itemId] ??
+                                                  false,
+                                              onChanged: (bool? value) {
+                                                cartProvider.toggleItem(
+                                                  itemId,
+                                                  value ?? false,
+                                                );
+                                              },
+                                            ),
+                                            // Spacer(),
+                                            IconButton(
+                                              onPressed: () async {
+                                                await CartService().deleteItem(
+                                                  itemId,
+                                                );
+                                                setState(() {});
+                                              },
+                                              icon: Icon(Icons.delete),
+                                              color: Colors.red,
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -246,39 +298,123 @@ class _CartScreenState extends State<CartScreen> {
                           .values
                           .any((isChecked) => isChecked);
 
+                      // collect variant ids
+                      final checkedItems =
+                          cartItems.entries
+                              .where(
+                                (entry) =>
+                                    cartProvider.selectedItems[entry.key] ==
+                                    true,
+                              )
+                              .map((entry) {
+                                final value = entry.value;
+                                if (value is! Map || value['data'] == null)
+                                  return null;
+                                final dynamic rawData = value['data'];
+                                final itemMap =
+                                    rawData is String
+                                        ? jsonDecode(rawData)
+                                        : rawData;
+                                final item = Item.fromJson(itemMap);
+                                final variantId =
+                                    item.variants[0].id.toString();
+                                final quantity = value['quantity'] ?? 1;
+                                return '$variantId:$quantity';
+                              })
+                              .whereType<String>()
+                              .toList();
+
+                      final cartUrl =
+                          'https://tambay.co/cart/${checkedItems.join(',')}';
+
                       return Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: ElevatedButton(
                           onPressed:
-                              isCheckoutEnabled
-                                  ? () {
-                                    // Handle checkout logic here
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          "Proceeding to checkout...",
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                  : null, // Disable button if no items are selected
-                          child: Text("Checkout"),
+                              isCheckoutEnabled ? () => openURL(cartUrl) : null,
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
                                 isCheckoutEnabled
                                     ? const Color.fromARGB(255, 0, 0, 0)
                                     : Colors.grey,
-                          ),
+                          ), // Disable button if no items are selected
+                          child: Text("Checkout"),
                         ),
                       );
                     },
                   ),
+                  // Consumer<CartProvider>(
+                  //   builder: (context, cartProvider, _) {
+                  //     return ElevatedButton(
+                  //       onPressed: () {
+                  //         // Collect names of all checked items
+                  //         final checkedVariants =
+                  //             cartItems.entries
+                  //                 .where(
+                  //                   (entry) =>
+                  //                       cartProvider.selectedItems[entry.key] ==
+                  //                       true,
+                  //                 )
+                  //                 .map((entry) {
+                  //                   final value = entry.value;
+                  //                   if (value is! Map || value['data'] == null)
+                  //                     return null;
+                  //                   final dynamic rawData = value['data'];
+                  //                   final itemMap =
+                  //                       rawData is String
+                  //                           ? jsonDecode(rawData)
+                  //                           : rawData;
+                  //                   final item = Item.fromJson(itemMap);
+                  //                   final variantId =
+                  //                       item.variants[0].id.toString();
+                  //                   final quantity = value['quantity'] ?? 1;
+                  //                   return {
+                  //                     'variantId': variantId,
+                  //                     'quantity': quantity,
+                  //                   };
+                  //                 })
+                  //                 .whereType<Map<String, dynamic>>()
+                  //                 .toList();
+
+                  //         showDialog(
+                  //           context: context,
+                  //           builder:
+                  //               (context) => AlertDialog(
+                  //                 title: Text("Checked Item Names"),
+                  //                 content:
+                  //                     checkedVariants.isEmpty
+                  //                         ? Text("No items selected.")
+                  //                         : Column(
+                  //                           mainAxisSize: MainAxisSize.min,
+                  //                           crossAxisAlignment:
+                  //                               CrossAxisAlignment.start,
+                  //                           children:
+                  //                               checkedVariants
+                  //                                   .map(
+                  //                                     (name) =>
+                  //                                         Text(name.toString()),
+                  //                                   )
+                  //                                   .toList(),
+                  //                         ),
+                  //                 actions: [
+                  //                   TextButton(
+                  //                     onPressed: () => Navigator.pop(context),
+                  //                     child: Text("Close"),
+                  //                   ),
+                  //                 ],
+                  //               ),
+                  //         );
+                  //       },
+                  //       child: Text("Display Data"),
+                  //     );
+                  //   },
+                  // ),
                 ],
               );
             } else {
               return Center(
                 child: Text(
-                  "Your cart is empty. Add items to your cart!",
+                  "Cart is empty",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               );

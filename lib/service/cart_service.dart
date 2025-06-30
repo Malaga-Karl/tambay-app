@@ -38,4 +38,17 @@ class CartService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
   }
+
+  Future<void> deleteItem(String itemId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final cart = prefs.getString(_cartKey);
+
+    if (cart != null) {
+      Map<String, dynamic> cartItems = Map<String, dynamic>.from(
+        jsonDecode(cart),
+      );
+      cartItems.remove(itemId);
+      await prefs.setString(_cartKey, jsonEncode(cartItems));
+    }
+  }
 }
