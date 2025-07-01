@@ -5,6 +5,7 @@ import 'package:tambay/components/cart_item_component.dart';
 // import 'package:tambay/models/item.dart';
 // import 'package:tambay/data/dummy_items.dart';
 import 'package:tambay/provider/products_provider.dart';
+import 'package:tambay/service/cart_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,24 +31,51 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           title: Text("Tambay"),
           actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 8.0,
+                horizontal: 16.0,
+              ),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/search');
+                },
+                child: Container(
+                  width: 220,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12.0,
+                    vertical: 8.0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24.0),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.search, color: Colors.grey),
+                      SizedBox(width: 8),
+                      Text("Search...", style: TextStyle(color: Colors.grey)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/search');
+                Navigator.pushNamed(context, "/cart");
               },
-              icon: Icon(Icons.search),
+              icon:
+              // cartItemCount > 0 ?
+              //   Badge.count(count: cartItemCount, child: Icon(Icons.shopping_cart_outlined),)
+              //   :
+              Icon(Icons.shopping_cart_outlined),
             ),
-            // IconButton(
-            //   onPressed: (){Navigator.pushNamed(context, "/cart");},
-            //   icon: cartItemCount > 0 ?
-            //     Badge.count(count: cartItemCount, child: Icon(Icons.shopping_cart_outlined),)
-            //     :
-            //     Icon(Icons.shopping_cart_outlined)
-            //   )
           ],
           bottom: TabBar(tabs: [Tab(text: "Shop"), Tab(text: "Featured")]),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Consumer<ProductProvider>(
             builder: (context, productProvider, _) {
               if (productProvider.isLoading) {
@@ -72,18 +100,24 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                   // Featured Tab
-                  GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10.0,
-                          mainAxisSpacing: 10.0,
-                          childAspectRatio: 0.65,
-                        ),
-                    itemCount: items.length,
-                    itemBuilder: (context, index) {
-                      return CartItemComponent(item: items[index]);
+                  // GridView.builder(
+                  //   gridDelegate:
+                  //       const SliverGridDelegateWithFixedCrossAxisCount(
+                  //         crossAxisCount: 2,
+                  //         crossAxisSpacing: 10.0,
+                  //         mainAxisSpacing: 10.0,
+                  //         childAspectRatio: 0.65,
+                  //       ),
+                  //   itemCount: items.length,
+                  //   itemBuilder: (context, index) {
+                  //     return CartItemComponent(item: items[index]);
+                  //   },
+                  // ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await CartService().clearPrefs();
                     },
+                    child: Text("Delete All Items in Cart"),
                   ),
                 ],
               );

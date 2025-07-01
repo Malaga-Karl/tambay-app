@@ -22,4 +22,13 @@ class Option {
       values: List<String>.from(json['values']),
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'product_id': productId,
+      'name': name,
+      'position': position,
+      'values': values,
+    };
+  }
 }

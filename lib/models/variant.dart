@@ -3,7 +3,7 @@ class Variant {
   final int productId;
   final String title;
   final String price;
-  final int position;
+  final int? position;
   final String inventoryPolicy;
   final String? compareAtPrice;
   final String option1;
@@ -14,15 +14,15 @@ class Variant {
   final bool taxable;
   final String barcode;
   final String fulfillmentService;
-  final int grams;
+  final int? grams;
   final String? inventoryManagement;
   final bool requiresShipping;
   final String sku;
   final double weight;
   final String weightUnit;
-  final int inventoryItemId;
-  final int inventoryQuantity;
-  final int oldInventoryQuantity;
+  final int? inventoryItemId;
+  final int? inventoryQuantity;
+  final int? oldInventoryQuantity;
   final String adminGraphqlApiId;
   final int? imageId;
 
@@ -84,5 +84,36 @@ class Variant {
       adminGraphqlApiId: json['admin_graphql_api_id'],
       imageId: json['image_id'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      'product_id': productId,
+      'title': title,
+      'price': price,
+      'position': position,
+      'inventory_policy': inventoryPolicy,
+      'compare_at_price': compareAtPrice,
+      'option1': option1,
+      'option2': option2,
+      'option3': option3,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
+      'taxable': taxable,
+      'barcode': barcode,
+      'fulfillment_service': fulfillmentService,
+      'grams': grams,
+      'inventory_management': inventoryManagement,
+      'requires_shipping': requiresShipping,
+      'sku': sku,
+      'weight': weight,
+      'weight_unit': weightUnit,
+      'inventory_item_id': inventoryItemId,
+      'inventory_quantity': inventoryQuantity,
+      'oldInventory_quantity': oldInventoryQuantity,
+      'admin_graphql_api_id': adminGraphqlApiId,
+      'image_id': imageId,
+    };
   }
 }

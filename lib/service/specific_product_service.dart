@@ -2,8 +2,9 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:tambay/models/item.dart';
+// import 'package:tambay/models/product_image.dart';
 
-class ProductService {
+class SpecificProductService {
   final dio = Dio(
     BaseOptions(
       headers: {
@@ -12,25 +13,24 @@ class ProductService {
       },
     ),
   );
-  List<Item> itemsList = [];
 
+  late Item productItem;
   // not dynamic
   // add error handling
-  Future<List<Item>> fetchItems() async {
+  Future<Item> fetchItem(id) async {
     try {
       final response = await dio.get(
-        'https://tambay.co/admin/api/2025-04/products.json',
+        'https://tambay.co/admin/api/2025-04/products/$id.json',
       );
 
-      print(response.data["products"]);
+      final dynamic responseData = response.data["product"];
 
-      final List<dynamic> responseData = response.data["products"];
+      productItem = Item.fromJson(responseData);
 
-      itemsList =
-          responseData.map((product) => Item.fromJson(product)).toList();
+      print(response.data["product"]);
     } catch (err) {
       throw Exception(err);
     }
-    return itemsList;
+    return (productItem);
   }
 }

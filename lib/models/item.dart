@@ -70,4 +70,27 @@ class Item {
       image: ProductImage.fromJson(json['image']),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'body_html': bodyHtml,
+      'vendor': vendor,
+      'product_type': productType,
+      'created_at': createdAt,
+      'handle': handle,
+      'updated_at': updatedAt,
+      'published_at': publishedAt,
+      'template_suffix': templateSuffix,
+      'published_scope': publishedScope,
+      'tags': tags,
+      'status': status,
+      'admin_graphql_api_id': adminGraphqlApiId,
+      'variants': variants.map((v) => v.toJson()).toList(),
+      'options': options.map((o) => o.toJson()).toList(),
+      'images': images.map((img) => img.toJson()).toList(),
+      'image': image.toJson(),
+    };
+  }
 }
