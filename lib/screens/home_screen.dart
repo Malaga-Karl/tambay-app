@@ -17,7 +17,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     Provider.of<ProductProvider>(context, listen: false).fetchItems();
     super.initState();
   }
