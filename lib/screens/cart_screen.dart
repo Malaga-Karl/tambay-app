@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+// import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tambay/models/item.dart';
-import 'package:tambay/models/shared_pref.dart';
 import 'package:tambay/provider/cart_provider.dart';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
@@ -343,72 +342,6 @@ class _CartScreenState extends State<CartScreen> {
                       );
                     },
                   ),
-                  // Consumer<CartProvider>(
-                  //   builder: (context, cartProvider, _) {
-                  //     return ElevatedButton(
-                  //       onPressed: () {
-                  //         // Collect names of all checked items
-                  //         final checkedVariants =
-                  //             cartItems.entries
-                  //                 .where(
-                  //                   (entry) =>
-                  //                       cartProvider.selectedItems[entry.key] ==
-                  //                       true,
-                  //                 )
-                  //                 .map((entry) {
-                  //                   final value = entry.value;
-                  //                   if (value is! Map || value['data'] == null)
-                  //                     return null;
-                  //                   final dynamic rawData = value['data'];
-                  //                   final itemMap =
-                  //                       rawData is String
-                  //                           ? jsonDecode(rawData)
-                  //                           : rawData;
-                  //                   final item = Item.fromJson(itemMap);
-                  //                   final variantId =
-                  //                       item.variants[0].id.toString();
-                  //                   final quantity = value['quantity'] ?? 1;
-                  //                   return {
-                  //                     'variantId': variantId,
-                  //                     'quantity': quantity,
-                  //                   };
-                  //                 })
-                  //                 .whereType<Map<String, dynamic>>()
-                  //                 .toList();
-
-                  //         showDialog(
-                  //           context: context,
-                  //           builder:
-                  //               (context) => AlertDialog(
-                  //                 title: Text("Checked Item Names"),
-                  //                 content:
-                  //                     checkedVariants.isEmpty
-                  //                         ? Text("No items selected.")
-                  //                         : Column(
-                  //                           mainAxisSize: MainAxisSize.min,
-                  //                           crossAxisAlignment:
-                  //                               CrossAxisAlignment.start,
-                  //                           children:
-                  //                               checkedVariants
-                  //                                   .map(
-                  //                                     (name) =>
-                  //                                         Text(name.toString()),
-                  //                                   )
-                  //                                   .toList(),
-                  //                         ),
-                  //                 actions: [
-                  //                   TextButton(
-                  //                     onPressed: () => Navigator.pop(context),
-                  //                     child: Text("Close"),
-                  //                   ),
-                  //                 ],
-                  //               ),
-                  //         );
-                  //       },
-                  //       child: Text("Display Data"),
-                  //     );
-                  //   },
-                  // ),
                 ],
               );
             } else {
